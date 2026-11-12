@@ -6,13 +6,13 @@ Dữ liệu: 12 ảnh người COCO val2017 (Lin et al., 2014) và 8 ảnh chân
 
 ## 0. Thông tin học viên
 
-- Họ tên:
-- MSSV:
-- Email:
-- Link repository:
-- Phiên bản CVAT (Help → About):
-- Máy: hệ điều hành ___ · RAM ___ GB · chạy CVAT chế độ đầy đủ / lite
-- Bộ ảnh (`src/exports/assignment.json` do `lab.py setup` tạo): có / không
+- Họ tên: Trương Thành Đức 
+- MSSV: 2A202603034
+- Email: 26ai.ductt2@vinuni.edu.vn
+- Link repository:https://github.com/thanhduc270998/K5-L2A-DAY04-TruongThanhDuc-2A202603034-KeypointPose.git
+- Phiên bản CVAT (Help → About):2.74.1
+- Máy: hệ điều hành Windows 10 · RAM 12 GB · chạy CVAT chế độ đầy đủ
+- Bộ ảnh (`src/exports/assignment.json` do `lab.py setup` tạo): có
 - Giờ bắt đầu:
 - Giờ kết thúc:
 
@@ -100,7 +100,19 @@ Hai job đã chuyển sang completed trên CVAT? Có / Không
 Dán phần **TÓM TẮT** in ra từ `src/check_submission.py`:
 
 ```text
-(dán ở đây)
+- File person: TruongThanhDuc_persons.zip
+  Số ảnh: 12 · số skeleton `person`: 23 · mỗi annotation 51 số
+  Skeleton theo ảnh: 000000043500=2, 000000056651=2, 000000078170=2, 000000137767=1, 000000194027=1, 000000201702=1, 000000253584=5, 000000309169=3, 000000311497=2, 000000365099=1, 000000390585=1, 000000480582=2
+  Cờ v: v=2 286 (73%) · v=1 63 (16%) · v=0 42 (11%)
+  num_keypoints trung bình: 15.2
+- File face: TruongThanhDuc_faces.zip
+  Số ảnh: 8 · số skeleton `face`: 8 · mỗi annotation 39 số
+  Skeleton theo ảnh: face_137371=1, face_147624=1, face_185015=1, face_249336=1, face_324513=1, face_562485=1, face_575921=1, face_85624=1
+  Cờ v: v=2 96 (92%) · v=1 8 (8%) · v=0 0 (0%)
+  num_keypoints trung bình: 13.0
+- Ghi chú: 42 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0). Không phải lỗi: điểm v = 0 bị bỏ qua khi huấn luyện và khi chấm.
+- Số [LỖI]: 0 · số [CẢNH BÁO]: 4
+Kết quả: ĐẠT (đọc lại từng cảnh báo ở trên)
 ```
 
 Các `[CẢNH BÁO]` còn giữ nguyên và lý do:

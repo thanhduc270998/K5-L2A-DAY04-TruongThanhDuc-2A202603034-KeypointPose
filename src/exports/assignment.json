@@ -1,0 +1,65 @@
+{
+ "mssv": "2A202603034",
+ "ten": "TruongThanhDuc",
+ "pool_version": "d04-k5-v2",
+ "cvat_user": "truongthanhduc270998@gmail.com",
+ "project": "d04-keypoint",
+ "persons": [
+  "000000137767.jpg",
+  "000000194027.jpg",
+  "000000201702.jpg",
+  "000000365099.jpg",
+  "000000390585.jpg",
+  "000000056651.jpg",
+  "000000078170.jpg",
+  "000000311497.jpg",
+  "000000043500.jpg",
+  "000000480582.jpg",
+  "000000253584.jpg",
+  "000000309169.jpg"
+ ],
+ "faces": [
+  "face_147624.jpg",
+  "face_575921.jpg",
+  "face_85624.jpg",
+  "face_137371.jpg",
+  "face_185015.jpg",
+  "face_249336.jpg",
+  "face_324513.jpg",
+  "face_562485.jpg"
+ ],
+ "tasks": {
+  "persons": {
+   "task_id": 11,
+   "job_id": 11,
+   "task_name": "persons-TruongThanhDuc"
+  },
+  "faces": {
+   "task_id": 12,
+   "job_id": 12,
+   "task_name": "faces-TruongThanhDuc"
+  },
+  "persons-extra": {
+   "task_id": 13,
+   "job_id": 13,
+   "task_name": "persons-extra-TruongThanhDuc"
+  },
+  "faces-extra": {
+   "task_id": 14,
+   "job_id": 14,
+   "task_name": "faces-extra-TruongThanhDuc"
+  }
+ },
+ "persons_extra": [
+  "000000104800.jpg",
+  "000000188948.jpg",
+  "000000323525.jpg"
+ ],
+ "faces_extra": [
+  "face_296417.jpg",
+  "face_317330.jpg",
+  "face_344941.jpg",
+  "face_494518.jpg",
+  "face_507166.jpg"
+ ]
+}

@@ -20,14 +20,14 @@ Dữ liệu: 12 ảnh người COCO val2017 (Lin et al., 2014) và 8 ảnh chân
 
 | Label | Kiểu | Số điểm | Tên điểm đúng bảng của lab? | Đúng thứ tự? | Số cạnh |
 |---|---|---:|---|---|---:|
-| `person` | | | | | |
-| `face` | | | | | |
+| `person` | Skeleton |17 | Có | Có | 19 |
+| `face` | Skeleton |13 | Có | Có | 13 |
 
-Mẫu `person` dựng theo người quay mặt về camera (các điểm `left_*` nằm bên phải khung mẫu)? Có / Không
+Mẫu `person` dựng theo người quay mặt về camera (các điểm `left_*` nằm bên phải khung mẫu)? Có
 
 Cách đổi cờ `occluded` / `outside` cho **một điểm** trên phiên bản CVAT này (một câu):
 
-...
+Để đổi cờ occluded hoặc outside cho một điểm riêng lẻ trong Skeleton trên CVAT, chỉ cần nhấp chuột phải trực tiếp vào điểm đó (hoặc di chuột qua và nhấn phím tắt Q cho occluded, O cho outside) rồi bật/tắt biểu tượng tương ứng
 
 ## 2. Số lượng đã gán và thời gian (CP1, CP2)
 
@@ -64,7 +64,7 @@ Mã lỗi dùng đúng một trong: `lr_swap`, `vis_flag`, `position`, `missing`
 
 | Ảnh | Người / mặt | Điểm | Mã lỗi | Ghi chú | Đã sửa? |
 |---|---|---|---|---|---|
-| | | | | | |
+| 000000311497.jpg | người | 17 | lr_swap | cặp knee, ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (`lr_swap`), hoặc tay / chân bắt chéo thật: kiểm lại | Không cần phải sửa do người phụ nữ đang bước đi và tôi đã gán đúng trái phải |
 | | | | | | |
 | | | | | | |
 | | | | | | |
@@ -101,17 +101,17 @@ Dán phần **TÓM TẮT** in ra từ `src/check_submission.py`:
 
 ```text
 - File person: TruongThanhDuc_persons.zip
-  Số ảnh: 12 · số skeleton `person`: 23 · mỗi annotation 51 số
-  Skeleton theo ảnh: 000000043500=2, 000000056651=2, 000000078170=2, 000000137767=1, 000000194027=1, 000000201702=1, 000000253584=5, 000000309169=3, 000000311497=2, 000000365099=1, 000000390585=1, 000000480582=2
-  Cờ v: v=2 286 (73%) · v=1 63 (16%) · v=0 42 (11%)
-  num_keypoints trung bình: 15.2
+  Số ảnh: 12 · số skeleton `person`: 20 · mỗi annotation 51 số
+  Skeleton theo ảnh: 000000043500=2, 000000056651=2, 000000078170=2, 000000137767=1, 000000194027=1, 000000201702=1, 000000253584=2, 000000309169=3, 000000311497=2, 000000365099=1, 000000390585=1, 000000480582=2
+  Cờ v: v=2 237 (70%) · v=1 61 (18%) · v=0 42 (12%)
+  num_keypoints trung bình: 14.9
 - File face: TruongThanhDuc_faces.zip
   Số ảnh: 8 · số skeleton `face`: 8 · mỗi annotation 39 số
   Skeleton theo ảnh: face_137371=1, face_147624=1, face_185015=1, face_249336=1, face_324513=1, face_562485=1, face_575921=1, face_85624=1
   Cờ v: v=2 96 (92%) · v=1 8 (8%) · v=0 0 (0%)
   num_keypoints trung bình: 13.0
 - Ghi chú: 42 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0). Không phải lỗi: điểm v = 0 bị bỏ qua khi huấn luyện và khi chấm.
-- Số [LỖI]: 0 · số [CẢNH BÁO]: 4
+- Số [LỖI]: 0 · số [CẢNH BÁO]: 1
 Kết quả: ĐẠT (đọc lại từng cảnh báo ở trên)
 ```
 
@@ -143,7 +143,7 @@ Nguồn ảnh: COCO val2017 / Wikimedia Commons.
 
 1. Lỗi bạn mắc nhiều nhất hôm nay, và cách bạn sẽ tránh ở dự án thật:
 
-   ...
+   gán sai hướng 
 
 2. Một quy tắc bạn đề xuất thêm vào guideline (kèm ảnh ví dụ nếu có):
 

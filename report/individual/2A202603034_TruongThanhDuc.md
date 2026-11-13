@@ -33,18 +33,18 @@ Cách đổi cờ `occluded` / `outside` cho **một điểm** trên phiên bả
 
 | Nhóm ảnh | Số ảnh | Số skeleton đã gán | Số người dưới 60 px (không gán) | Số poster / gương / màn hình bỏ qua | Thời gian (phút) |
 |---|---:|---:|---:|---:|---:|
-| `easy` | 5 | | | | |
-| `occluded` | 3 | | | | |
-| `back` | 2 | | | | |
-| `small` | 1 | | | | |
-| `crowd` | 1 | | | | |
-| `faces` | 8 | | — | | |
+| `easy` | 5 | 5 | 2 | 1 | |
+| `occluded` | 3 | 6 | 0 | 1 | |
+| `back` | 2 | 4 | 1 | 0 | |
+| `small` | 1 | 2 | 10 | 0 | |
+| `crowd` | 1 | 3 | 2 | 0 | |
+| `faces` | 8 | 8 | — | 0 | |
 
-- Số ảnh người đã xong ở mốc phút 105: ___ / 10
-- Thời gian thực tế (phút): CP1 ___ · CP2 ___ · CP3 ___
+- Số ảnh người đã xong ở mốc phút 105: 10 / 10
+- Thời gian thực tế (phút): CP1 _85_ · CP2 _26_ · CP3 _15_
 - Ảnh tốn thời gian nhất là ảnh nào, vì sao?
 
-...
+Ảnh tốn thời gian nhất là ảnh `000000253584.jpg` do ban đầu tôi không biết cách đo pixel người trong ảnh nên tôi đã đánh skeleton cho 7 người nhìn thấy được trong bức ảnh , nhưng khi tôi chạy file check kết quả thì tôi nhận thấy mình đã không tuân thủ việc không đánh skeleton cho người dưới 60px (5 người). Sau khi biết mình mắc sai lầm thì tôi đã xóa đi và kiểm tra lại tốn khoảng 15 phút
 
 ## 3. Bảng ca khó (CP1, CP2)
 
@@ -52,8 +52,8 @@ Mỗi điểm bạn phân vân một dòng, nhất là phân vân giữa `v = 1`
 
 | Ảnh | Người / mặt | Điểm | Cờ đã chọn | Phân vân giữa | Lý do chọn |
 |---|---|---|---:|---|---|
-| | | | | | |
-| | | | | | |
+| `000000056651.jpg` | Người phụ nữ mặc áo kẻ ở giữa (`#2`) | `right_wrist` | `v = 0` | `v = 1` và `v = 0` | Cổ tay phải bị che khuất phía sau bánh sinh nhật / khay bánh; khi thử đặt `v = 1` theo vị trí dự đoán (`khoanh tay` sau bánh) thì script kiểm tra cảnh báo cặp `wrist` ngược phía so với các cặp còn lại, đồng thời không ước lượng chắc chắn được tâm khớp bị che nên chuyển sang `v = 0` theo quy tắc không đoán bừa. |
+| `000000311497.jpg` | Người phụ nữ áo tím (`#2`) | `left_knee`, `right_knee`, `left_ankle`, `right_ankle` | `v = 2` | `lr_swap` hay chân bắt chéo thật | Nhìn từ góc nghiêng 3/4 sang trái, chân trái bước lên trước bắt chéo qua phía trước chân phải (chân trước có băng gối chồng lên đùi sau và bàn chân lộ má ngoài bên trái, chân sau lùi về phải), ngược phía ngang với vai/tay nên script phát `[CẢNH BÁO]`; cả 4 khớp đều lộ rõ nên giữ nguyên `v = 2` và giữ nguyên bên trái/phải. |
 | | | | | | |
 
 ## 4. Bảng tự review (CP3)
@@ -64,9 +64,12 @@ Mã lỗi dùng đúng một trong: `lr_swap`, `vis_flag`, `position`, `missing`
 
 | Ảnh | Người / mặt | Điểm | Mã lỗi | Ghi chú | Đã sửa? |
 |---|---|---|---|---|---|
-| 000000311497.jpg | người | 17 | lr_swap | cặp knee, ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (`lr_swap`), hoặc tay / chân bắt chéo thật: kiểm lại | Không cần phải sửa do người phụ nữ đang bước đi và tôi đã gán đúng trái phải |
-| | | | | | |
-| | | | | | |
+| 000000311497.jpg | người | 17 | lr_swap | cặp knee, ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (`lr_swap`), hoặc tay / chân bắt chéo thật: kiểm lại | Đã sửa cho cặp hông (left_hip chấm đỏ v = 2, right_hip chấm xanh nét đứt v = 1) hiện nằm gần ngang nhau đúng tầm khớp hông theo đường chỉ hồng, hai đường vai–hông song song tự nhiên theo thân và nối xuống đúng trục hai đùi |
+| `000000056651.jpg` | Người phụ nữ mặc áo kẻ ở giữa (`#2`) | `right_wrist` | `vis_flag` | Cổ tay phải bị che khuất phía sau bánh sinh nhật / khay bánh; ban đầu thử đặt `v = 1` theo vị trí dự đoán (`khoanh tay` sau bánh) thì script kiểm tra cảnh báo cặp `wrist` ngược phía so với các cặp còn lại, đồng thời không ước lượng chắc chắn được tâm khớp bị che (phân vân giữa `v = 1` và `v = 0`). | Đã sửa (chuyển từ `v = 1` sang `v = 0` theo quy tắc không đoán bừa) |
+| `000000253584.jpg` | Người nhỏ phía sau (`#2` cũ, cao 51 px) | Cả skeleton | `extra` | Gán nhầm người có chiều cao dưới ngưỡng 60 px (`51 px`), bị `check_submission.py` cảnh báo ở commit `18a5a41`. | Đã sửa (xóa skeleton ở commit `46314b2`) |
+| `000000253584.jpg` | Người nhỏ phía sau (`#3` cũ, cao 29 px) | Cả skeleton | `extra` | Gán nhầm người có chiều cao dưới ngưỡng 60 px (`29 px`), bị `check_submission.py` cảnh báo ở commit `18a5a41`. | Đã sửa (xóa skeleton ở commit `46314b2`) |
+| `000000253584.jpg` | Người nhỏ phía sau (`#5` cũ, cao 28 px) | Cả skeleton | `extra` | Gán nhầm người có chiều cao dưới ngưỡng 60 px (`28 px`), bị `check_submission.py` cảnh báo ở commit `18a5a41`. | Đã sửa (xóa skeleton ở commit `46314b2`) |
+| `000000137767.jpg` | Người phụ nữ cầm đĩa bay (`#1`) | `left_wrist` | `vis_flag` | Cổ tay trái buông sau mép váy/nơ hồng bị che khuất nhưng ước lượng chắc được; ở commit `18a5a41` đặt nhầm `v = 2`. | Đã sửa (đổi `v = 2` → `v = 1` ở commit `46314b2`) |
 | | | | | | |
 | | | | | | |
 | | | | | | |
@@ -77,11 +80,11 @@ Tổng hợp số lỗi theo mã:
 
 | `lr_swap` | `vis_flag` | `position` | `missing` | `extra` | `ok` |
 |---:|---:|---:|---:|---:|---:|
-| | | | | | |
+| 1 | 2 | 0 | 0 | 3 | 0 |
 
 Điểm còn phân vân giữa `v = 1` và `v = 0` (ghi cả hai lựa chọn và lý do chọn):
 
-...
+- `000000056651.jpg` — người phụ nữ mặc áo kẻ ở giữa (`#2`), điểm `right_wrist`: phân vân giữa **`v = 1`** (dự đoán khoanh tay ẩn phía sau bánh sinh nhật, nhưng `check_submission.py` cảnh báo cặp `wrist` ngược phía) và **`v = 0`** (do khớp bị che hoàn toàn không ước lượng chắc chắn được tâm khớp nên chọn `v = 0` theo quy tắc không đoán bừa).
 
 ## 5. Kiểm file xuất và kết quả tự kiểm (CP4)
 
@@ -89,7 +92,7 @@ Tự kiểm tay trong file JSON:
 
 | File | Người / mặt kiểm (ảnh, thứ tự) | Số phần tử `keypoints` | Điểm `outside` ra `v = 0`, `occluded` ra `v = 1`? | `num_keypoints` khớp? |
 |---|---|---:|---|---|
-| `HoVaTen_persons.zip` | | | | |
+| `TruongThanhDuc_persons.zip` | person | | | |
 | `HoVaTen_persons.zip` | | | | |
 | `HoVaTen_faces.zip` | | | | |
 

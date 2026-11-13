@@ -175,21 +175,27 @@ Nguồn ảnh: COCO val2017 / Wikimedia Commons.
 
 | Ảnh | Số skeleton | Số người dưới 60 px | Ca khó nhất |
 |---|---:|---:|---|
-| | | | |
-| | | | |
-| | | | |
+| 000000188948.jpg | 3 | 0 | xác định skeleton của 2 người đàn ông đứng sát nhau|
+| 000000104800.jpg | 3 | 0 | xác định skeleton của người phụ nữ mặc áo trắng ở rìa ngoài bên tay phải ảnh|
+| 000000323525.jpg | 3 | 0 | Xác định skeleton của người chụp bóng mặc áo màu trắng|
 
 Kết quả `src/check_submission.py` cho `HoVaTen_bonus_persons.zip`:
 
 ```text
-(dán ở đây)
+- File person: TruongThanhDuc_bonus_persons.zip
+  Số ảnh: 3 · số skeleton `person`: 9 · mỗi annotation 51 số
+  Skeleton theo ảnh: 000000104800=3, 000000188948=3, 000000323525=3
+  Cờ v: v=2 78 (51%) · v=1 30 (20%) · v=0 45 (29%)
+  num_keypoints trung bình: 12.0
+- Ghi chú: 45 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0). Không phải lỗi: điểm v = 0 bị bỏ qua khi huấn luyện và khi chấm.- Số [LỖI]: 0 · số [CẢNH BÁO]: 0
+Kết quả: ĐẠT
 ```
 
 ### B2 — 5 ảnh khuôn mặt đen trắng / hồng ngoại
 
 Ảnh không màu khó hơn ở điểm nào? Kính râm trên ảnh hồng ngoại có còn là `v = 1` không?
 
-...
+ảnh face_317330.jpg là ảnh khó nhất vì phân biệt chỗ gọng kính với mắt dưới hơi khó , Kính râm trên ảnh hồng ngoại không còn là `v = 1`
 
 ### B3 — Model so với nhãn của tôi (không tính điểm)
 
@@ -210,4 +216,4 @@ Kết quả `src/check_submission.py` cho `HoVaTen_bonus_persons.zip`:
 
 ## 9. Tài liệu tham khảo và công cụ AI đã dùng
 
-...
+Công cụ AI: Antigravity (gemini 4 Hydrogen Extra)

@@ -92,11 +92,11 @@ Tự kiểm tay trong file JSON:
 
 | File | Người / mặt kiểm (ảnh, thứ tự) | Số phần tử `keypoints` | Điểm `outside` ra `v = 0`, `occluded` ra `v = 1`? | `num_keypoints` khớp? |
 |---|---|---:|---|---|
-| `TruongThanhDuc_persons.zip` | person | | | |
-| `HoVaTen_persons.zip` | | | | |
-| `HoVaTen_faces.zip` | | | | |
+| `TruongThanhDuc_persons.zip` | `000000056651.jpg` (`#2`, `id=4`) | 51 | Có (`2` điểm `v = 0`, `3` điểm `v = 1`, `12` điểm `v = 2`) | Có (`15` = `12 + 3`) |
+| `TruongThanhDuc_persons.zip` | `000000311497.jpg` (`#1`, `id=15`) | 51 | Có (`2` điểm `v = 0`, `2` điểm `v = 1`, `13` điểm `v = 2`) | Có (`15` = `13 + 2`) |
+| `TruongThanhDuc_faces.zip` | `face_324513.jpg` (`#1`, `id=5`) | 39 | Có (`8` điểm `occluded` ra `v = 1`, `5` điểm `v = 2`, không có `outside`) | Có (`13` = `5 + 8`) |
 
-Sau khi xuất, CVAT ghi `occluded` thành `v = ___` và `outside` thành `v = ___`. Tọa độ của điểm `outside` trong file là `0, 0` hay tọa độ cũ? ___
+Sau khi xuất, CVAT ghi `occluded` thành `v = 1` và `outside` thành `v = 0`. Tọa độ của điểm `outside` trong file là `0, 0` hay tọa độ cũ? **tọa độ cũ** (ví dụ `right_wrist` ở `000000056651.jpg #2` có `v = 0` vẫn mang tọa độ cũ `(371.15, 363.8)`).
 
 Hai job đã chuyển sang completed trên CVAT? Có / Không
 
@@ -113,14 +113,15 @@ Dán phần **TÓM TẮT** in ra từ `src/check_submission.py`:
   Skeleton theo ảnh: face_137371=1, face_147624=1, face_185015=1, face_249336=1, face_324513=1, face_562485=1, face_575921=1, face_85624=1
   Cờ v: v=2 96 (92%) · v=1 8 (8%) · v=0 0 (0%)
   num_keypoints trung bình: 13.0
-- Ghi chú: 42 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0). Không phải lỗi: điểm v = 0 bị bỏ qua khi huấn luyện và khi chấm.
+- Ghi chú: 42 điểm v = 0 vẫn mang tọa độ cũ (CVAT 2.x xuất như vậy; chuẩn COCO ghi 0, 0).
 - Số [LỖI]: 0 · số [CẢNH BÁO]: 1
 Kết quả: ĐẠT (đọc lại từng cảnh báo ở trên)
 ```
 
 Các `[CẢNH BÁO]` còn giữ nguyên và lý do:
 
-...
+- `[CẢNH BÁO] 000000311497.jpg #1: cặp knee, ankle nằm ngược phía so với các cặp còn lại. Có thể đổi trái/phải một cặp (lr_swap), hoặc tay / chân bắt chéo thật: kiểm lại.`
+  Lý do giữ nguyên: Người phụ nữ trong ảnh đang bước nghiêng 3/4 về bên trái khung hình, chân trái bước lên trước bắt chéo qua phía trước chân phải ở sau, khiến `left_knee`, `left_ankle` nằm lệch sang trái ảnh so với `right_knee`, `right_ankle` (ngược phía ngang với vai/tay/hông). Cả 4 khớp đều lộ rõ (`v = 2`) và đã gán đúng bên trái/phải của người (đồng thời đã kiểm tra, chỉnh lại cặp `left_hip`, `right_hip` cho đúng vị trí), nên cảnh báo này là chân bắt chéo thật, không sửa.
 
 ## 6. Ảnh chụp màn hình
 
@@ -146,19 +147,27 @@ Nguồn ảnh: COCO val2017 / Wikimedia Commons.
 
 1. Lỗi bạn mắc nhiều nhất hôm nay, và cách bạn sẽ tránh ở dự án thật:
 
-   gán sai hướng 
+   - **Lỗi thực tế đã gặp:**
+     - **Sai hướng / ngược bên (`lr_swap` / chéo vai–hông):** ở `000000311497.jpg` (người phụ nữ đứng nghiêng), cặp `left_hip` / `right_hip` ban đầu bị đặt chéo ngược phía so với cặp vai (ở commit `18a5a41` và `46314b2`) rồi mới sửa lại song song ở commit `d16794e`.
+     - **Gán thừa người dưới 60 px (`extra`) và nhầm cờ `v` (`vis_flag`):** ở `000000253584.jpg` đã xóa 3 skeleton nhỏ dưới 60 px ở commit `46314b2`, và ở `000000137767.jpg` đã sửa `left_wrist` từ `v = 2` → `v = 1`.
+   - **Cách tránh ở dự án thật:** Xác định rõ hướng mặt/hông người trước khi kéo điểm; bật hiển thị tên điểm để kiểm cặp `left_*` / `right_*`; soi các đường nối vai–hông–chân xem có vắt chéo bất thường không trước khi `Ctrl+S`; và đo nhanh chiều cao bbox (`>= 60 px`) trước khi gán.
 
 2. Một quy tắc bạn đề xuất thêm vào guideline (kèm ảnh ví dụ nếu có):
 
-   ...
+   - Bổ sung bước **"soi đường nối vai–hông cho người đứng nghiêng"** vào checklist (đề phòng trường hợp độ lệch ngang giữa `left_hip` và `right_hip` nhỏ hơn ngưỡng của script tự kiểm nên không có `[CẢNH BÁO]`, như ở `000000311497.jpg`).
+   - Bổ sung mẹo **"vẽ khung bbox đo chiều cao trước khi đặt từng điểm"** để kiểm tra ngưỡng `>= 60 px` ngay từ đầu, tránh mất thời gian gán xong mới phát hiện người dưới 60 px phải xóa như ở `000000253584.jpg`.
 
 3. Nhãn của bạn đi vào model ở đâu? Chọn một lỗi bạn đã sửa và nói nó sẽ làm model học sai thế nào (heatmap, trọng số trong loss, hay bước lật ảnh):
 
-   ...
+   - **Nhãn đi vào model:** Mỗi điểm `v > 0` tạo một đỉnh Gauss trên **heatmap đích** của kênh khớp tương ứng; cờ `v` quy định **trọng số trong loss** (`v = 0` có trọng số `0`, `v = 1` và `v = 2` có trọng số `1`); và khi tăng cường dữ liệu bằng **lật ngang ảnh (`x' = W − x`)**, code huấn luyện sẽ tự đổi tên cặp `left ↔ right`.
+   - **Lỗi ở ảnh `000000311497.jpg` (commit `d16794e`) — cơ chế lật ảnh và heatmap:** Khi huấn luyện có bước lật ngang ảnh (`x' = W − x`) kèm đổi tên cặp `left ↔ right`, nếu `left_hip` và `right_hip` bị đặt ngược phía nhau thì cả ảnh gốc lẫn ảnh lật đều dạy model nhãn mâu thuẫn (hông trái thành hông phải), đồng thời đỉnh heatmap đích của hai kênh hông bị đặt lệch sang sai nửa thân người, làm giảm OKS.
 
 ## 8. Khó khăn và lỗi kỹ thuật
 
-...
+- **Ước lượng kích thước người dưới ngưỡng 60 px:** Ban đầu chưa quen cách kiểm tra chiều cao pixel của người trên CVAT nên ở ảnh `000000253584.jpg` đã gán thừa cả những người nhỏ ở phía sau; sau khi chạy `src/check_submission.py` thấy cảnh báo `< 60 px` (`51 px`, `29 px`, `28 px` ở commit `18a5a41`) mới quay lại xóa trên CVAT và rà soát lại (tốn thêm khoảng 15 phút).
+- **Khó phân biệt ranh giới `v = 1` / `v = 0` và cảnh báo `lr_swap` ở ca che khuất / bước chéo:** Ở `000000056651.jpg`, khớp `right_wrist` bị bánh sinh nhật che khuất nên thử ước lượng `v = 1` thì bị `check_submission.py` cảnh báo cặp `wrist` ngược phía, phải đổi về `v = 0` theo quy tắc không đoán bừa; ở `000000311497.jpg`, hai chân bước chéo thật làm script cảnh báo cặp `knee, ankle`, trong khi cặp `left_hip` / `right_hip` bị chéo nhẹ ngược chiều vai lại nhỏ hơn ngưỡng cảnh báo của script nên phải soi trực tiếp đường nối trên CVAT mới phát hiện để sửa.
+- **Định dạng file JSON xuất từ CVAT 2.74.1:** File `annotations/person_keypoints_default.json` trong zip xuất ra bị nén trên một dòng dài (`11 974` ký tự), gây khó khăn khi mở tự kiểm tay và chụp ảnh `4_json_export.png` (phải tách file tạm để format lại trong VS Code rồi xóa file tạm). Ngoài ra, các điểm `outside` (`v = 0`) vẫn giữ nguyên tọa độ `(x, y)` cũ thay vì `0, 0` (được `check_submission.py` xác nhận là bình thường, không phải lỗi).
+- **Lỗi hệ thống CVAT:** Không gặp lỗi mất dữ liệu hay lỗi không xuất được file từ CVAT trong quá trình làm bài.
 
 ## Bonus (nếu làm)
 
